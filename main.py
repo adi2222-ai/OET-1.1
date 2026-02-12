@@ -289,6 +289,10 @@ def test_vocabulary_word(word):
             }
     return {'correct': False, 'message': f'"{word}" is not found in our medical vocabulary database.'}
 
+def get_jobs():
+    """Load jobs from jobs file"""
+    return load_json_file(JOBS_FILE, [])
+
 # ============ Helper Functions ============
 PDF_DIR = os.path.join(app.root_path, 'testspdf')
 os.makedirs(PDF_DIR, exist_ok=True)
@@ -603,6 +607,43 @@ def mark_word_learned(word_id):
 def subscription():
     return render_template('subscription.html')
 
+
+def get_chat_messages(user_id):
+    """Return chat messages for a user as a list."""
+    data = load_json_file(CHAT_MESSAGES_FILE, {})
+    return data.get(str(user_id), [])
+
+
+def save_chat_messages(user_id, messages):
+    data = load_json_file(CHAT_MESSAGES_FILE, {})
+    data[str(user_id)] = messages
+    save_json_file(CHAT_MESSAGES_FILE, data)
+
+
+@app.route('/chat')
+@login_required
+def chat():
+    messages = get_chat_messages(current_user.id)
+    return render_template('chat.html', messages=messages)
+
+
+@app.route('/send_message', methods=['POST'])
+@login_required
+def send_message():
+    msg = request.form.get('message', '').strip()
+    if not msg:
+        flash('Message cannot be empty', 'warning')
+        return redirect(url_for('chat'))
+    messages = get_chat_messages(current_user.id)
+    messages.append({
+        'message': msg,
+        'timestamp': datetime.now().isoformat(sep=' ', timespec='seconds'),
+        'is_admin_reply': False
+    })
+    save_chat_messages(current_user.id, messages)
+    flash('Message sent. Support will reply soon.', 'success')
+    return redirect(url_for('chat'))
+
 @app.route('/consultation')
 def consultation():
     return render_template('consultation.html')
@@ -610,6 +651,11 @@ def consultation():
 @app.route('/materials')
 def materials():
     return render_template('materials.html')
+
+@app.route('/jobs')
+def jobs():
+    jobs_list = get_jobs()
+    return render_template('jobs.html', jobs=jobs_list)
 
 @app.route('/progress')
 @login_required
