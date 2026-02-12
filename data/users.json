@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "username": "Adi",
+    "email": "adriatik.damzi@outlook.com",
+    "password_hash": "scrypt:32768:8:1$G7IcKfrdqkow4wev$0ab36e4d6721b655ee5b092febd5ae1017d660710578417013fb1d06d3291a9ac76bbe3bcca84c5bcfd9e4e439dd28d19efacc7f307484e6551e0470486d6bd2",
+    "subscription_type": null,
+    "subscription_expires": null,
+    "created_at": "2026-02-12T11:55:23.094749"
+  }
+]

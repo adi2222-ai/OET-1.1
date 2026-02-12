@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Speaking Test{% endblock %}
+
+{% block content %}
+<style>
+    .speaking-interface {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .task-section {
+        border: 2px solid #dee2e6;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+    .task-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .recording-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .record-button {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        font-size: 2em;
+        line-height: 100px;
+        margin: 20px auto;
+    }
+    .recording-indicator {
+        display: none;
+        animation: pulse 1s infinite;
+        color: #dc3545;
+        font-weight: bold;
+        margin-top: 10px;
+    }
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+    .assessment-criteria {
+        background: #e8f4f8;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+    .criteria-list {
+        list-style: none;
+        padding: 0;
+    }
+    .criteria-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #b8dae8;
+    }
+    .criteria-list li:last-child {
+        border-bottom: none;
+    }
+    .criteria-list i {
+        color: #28a745;
+        margin-right: 10px;
+    }
+    .prompt-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 15px 0;
+    }
+    .timer {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 4px;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+</style>
+
+<div class="speaking-interface mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>{{ test.title }}</h2>
+            <p class="text-muted">{{ test.description }}</p>
+            <p class="text-info"><i class="fas fa-microphone me-2"></i><strong>This test requires recording your responses</strong></p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="timer">
+                <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                <small>Total Time Remaining</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Permission Request -->
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-microphone me-2"></i>
+        <strong>Microphone Access Required</strong> - This test requires microphone access to record your responses.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        {% if test.content.tasks %}
+            {% for task in test.content.tasks %}
+            <div class="task-section">
+                <div class="task-header">
+                    <h4 class="mb-2">
+                        <i class="fas fa-microphone me-2"></i>
+                        Task {{ task.task_number }}: {{ task.title }}
+                    </h4>
+                    <p class="mb-0"><small>Duration: {{ task.duration_minutes }} minutes</small></p>
+                </div>
+
+                <!-- Instructions -->
+                <div class="prompt-box">
+                    <strong>Instructions:</strong>
+                    <p class="mt-2">{{ task.description }}</p>
+                    {% if task.prompt %}
+                    <div style="white-space: pre-wrap;" class="mt-3">{{ task.prompt }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Assessment Criteria -->
+                {% if task.assessment_criteria %}
+                <div class="assessment-criteria">
+                    <strong>Assessment Criteria:</strong>
+                    <ul class="criteria-list mt-2">
+                        {% for criterion in task.assessment_criteria %}
+                        <li><i class="fas fa-check-circle"></i>{{ criterion }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Recording Section -->
+                <div class="recording-section">
+                    <h6 class="mb-3">Record Your Response</h6>
+                    <button type="button" class="btn btn-danger record-button" id="recordBtn_{{ task.id }}">
+                        <i class="fas fa-circle"></i>
+                    </button>
+                    <div class="recording-indicator" id="indicator_{{ task.id }}">
+                        <i class="fas fa-circle me-2"></i>RECORDING
+                    </div>
+                    <div class="mt-3">
+                        <small class="text-muted">Click the record button to start recording your response</small>
+                    </div>
+
+                    <!-- Response Display -->
+                    <div class="mt-3">
+                        <audio id="audio_{{ task.id }}" controls style="width: 100%; max-width: 300px;"></audio>
+                    </div>
+                    <input type="hidden" name="task_{{ task.id }}_audio" id="audioData_{{ task.id }}">
+                    <div>
+                        <span id="recordingTime_{{ task.id }}" class="badge bg-secondary">0:00</span>
+                    </div>
+                </div>
+
+                <!-- Transcript Input -->
+                <div class="mt-3">
+                    <label for="task_{{ task.id }}_transcript" class="form-label">
+                        <strong>Transcript (Optional):</strong>
+                    </label>
+                    <p class="text-muted small">You can optionally provide a written transcript of your response</p>
+                    <textarea 
+                        id="task_{{ task.id }}_transcript" 
+                        name="task_{{ task.id }}_transcript" 
+                        class="form-control"
+                        rows="6"
+                        placeholder="Your spoken response will be recorded. You can add a transcript here for reference..."></textarea>
+                </div>
+
+                {% if task.sample_script %}
+                <details class="mt-3 p-3 bg-light rounded">
+                    <summary class="cursor-pointer font-weight-bold">
+                        <i class="fas fa-lightbulb me-2"></i>View Sample Script
+                    </summary>
+                    <div class="mt-3 p-3 border bg-white rounded" style="white-space: pre-wrap;">
+                        {{ task.sample_script }}
+                    </div>
+                </details>
+                {% endif %}
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Speaking tasks will be loaded here
+            </div>
+        {% endif %}
+
+        <div class="mt-4 mb-4">
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="fas fa-check me-2"></i>Submit Speaking Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Recording functionality for each task
+    const tasks = document.querySelectorAll('[id^="recordBtn_"]');
+    const mediaRecorders = {};
+
+    tasks.forEach(btn => {
+        const taskId = btn.id.split('_')[1];
+        let mediaRecorder = null;
+        let isRecording = false;
+        let recordingTime = 0;
+        let chunks = [];
+
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            
+            if (!isRecording) {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    chunks = [];
+                    recordingTime = 0;
+
+                    mediaRecorder.ondataavailable = (e) => {
+                        chunks.push(e.data);
+                    };
+
+                    mediaRecorder.onstop = () => {
+                        const blob = new Blob(chunks, { type: 'audio/webm' });
+                        const audioUrl = URL.createObjectURL(blob);
+                        document.getElementById(`audio_${taskId}`).src = audioUrl;
+                        document.getElementById(`audioData_${taskId}`).value = audioUrl;
+                    };
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    btn.classList.remove('btn-danger');
+                    btn.classList.add('btn-success');
+                    btn.innerHTML = '<i class="fas fa-pause"></i>';
+                    document.getElementById(`indicator_${taskId}`).style.display = 'block';
+
+                    // Update recording time
+                    const timeInterval = setInterval(() => {
+                        recordingTime++;
+                        const mins = Math.floor(recordingTime / 60);
+                        const secs = recordingTime % 60;
+                        document.getElementById(`recordingTime_${taskId}`).textContent = 
+                            `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                    }, 1000);
+
+                } catch (error) {
+                    alert('Microphone access denied. Please allow microphone access to record.');
+                }
+            } else {
+                if (mediaRecorder) {
+                    mediaRecorder.stop();
+                }
+                isRecording = false;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-danger');
+                btn.innerHTML = '<i class="fas fa-circle"></i>';
+                document.getElementById(`indicator_${taskId}`).style.display = 'none';
+            }
+        });
+    });
+
+    // Timer countdown
+    const startTimer = () => {
+        let minutes = {{ test.duration_minutes }};
+        let seconds = 0;
+        const timerEl = document.getElementById('timer');
+        
+        setInterval(() => {
+            if (seconds === 0 && minutes === 0) {
+                document.getElementById('testForm').submit();
+                return;
+            }
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+            timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+    };
+    
+    document.addEventListener('DOMContentLoaded', startTimer);
+</script>
+{% endblock %}

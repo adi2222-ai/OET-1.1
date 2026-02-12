@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Listening Test{% endblock %}
+
+{% block content %}
+<style>
+    .listening-interface {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .audio-player-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .audio-controls {
+        margin: 20px 0;
+    }
+    .passage-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .question-group {
+        background: #fff;
+        border-left: 4px solid #28a745;
+        padding: 20px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+    }
+    .play-button {
+        font-size: 3em;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        line-height: 80px;
+    }
+</style>
+
+<div class="listening-interface mt-4">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <h2>{{ test.title }}</h2>
+            <p class="text-muted">{{ test.description }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="alert alert-warning">
+                <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                <small>Time Remaining</small>
+            </div>
+        </div>
+    </div>
+
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        <!-- Audio Player Section -->
+        <div class="audio-player-section">
+            <h4 class="mb-4">Listening Passage</h4>
+            <div class="audio-controls">
+                <button type="button" class="btn btn-light btn-lg play-button" id="playBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+            </div>
+            <audio id="audioPlayer" style="width: 100%; max-width: 400px; margin-top: 20px;">
+                <source src="/static/audio/listening.mp3" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="mt-3">
+                <small>Click play to listen to the audio passage</small>
+            </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-4">Answer the following questions:</h5>
+                
+                {% if test.content.passages %}
+                    {% for passage in test.content.passages %}
+                        <div class="passage-section">
+                            <h6 class="mb-3">{{ passage.title }}</h6>
+                            <p class="text-muted">{{ passage.description }}</p>
+                        </div>
+
+                        {% if passage.questions %}
+                            {% for question in passage.questions %}
+                                <div class="question-group">
+                                    <h6 class="mb-3">Question {{ question.id }}</h6>
+                                    <p class="mb-3"><strong>{{ question.question }}</strong></p>
+                                    
+                                    {% if question.type == 'multiple_choice' %}
+                                        <div class="options">
+                                            {% for idx, option in enumerate(question.options) %}
+                                                <div class="form-check mb-2">
+                                                    <input 
+                                                        class="form-check-input" 
+                                                        type="radio" 
+                                                        name="question_{{ question.id }}" 
+                                                        id="q{{ question.id }}_opt{{ idx }}" 
+                                                        value="{{ idx }}">
+                                                    <label class="form-check-label" for="q{{ question.id }}_opt{{ idx }}">
+                                                        {{ option }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Questions will be loaded here
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-success btn-lg w-100">
+                        <i class="fas fa-check me-2"></i>Submit Listening Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Audio player functionality
+    const playBtn = document.getElementById('playBtn');
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    playBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        } else {
+            audioPlayer.pause();
+            playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+    });
+
+    audioPlayer.addEventListener('ended', () => {
+        playBtn.innerHTML = '<i class="fas fa-replay"></i>';
+    });
+
+    // Timer countdown
+    const startTimer = () => {
+        let minutes = {{ test.duration_minutes }};
+        let seconds = 0;
+        const timerEl = document.getElementById('timer');
+        
+        setInterval(() => {
+            if (seconds === 0 && minutes === 0) {
+                document.getElementById('testForm').submit();
+                return;
+            }
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+            timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+    };
+    
+    document.addEventListener('DOMContentLoaded', startTimer);
+</script>
+{% endblock %}

@@ -54,6 +54,7 @@ class RegisterForm(FlaskForm):
 # Data file paths
 DATA_DIR = 'data'
 USERS_FILE = os.path.join(DATA_DIR, 'users.json')
+OET_TESTS_FILE = os.path.join(DATA_DIR, 'oet_tests.json')
 PRACTICE_TESTS_FILE = os.path.join(DATA_DIR, 'practice_tests.json')
 FULL_MOCK_TESTS_FILE = os.path.join(DATA_DIR, 'full_mock_tests.json')
 MOCK_TESTS_FILE = os.path.join(DATA_DIR, 'full_mock_tests.json')
@@ -170,78 +171,20 @@ def create_user(username, email, password):
 
 # Test management
 def get_practice_tests():
-    return load_json_file(PRACTICE_TESTS_FILE, [
-        {
-            'id': 1,
-            'title': 'Listening Practice Test 1',
-            'section': 'Listening',
-            'duration_minutes': 30,
-            'description': 'Basic listening comprehension test',
-            'is_premium': False,
-            'content': {
-                'sections': {
-                    'listening': {
-                        'duration_minutes': 30,
-                        'passages': [],
-                        'questions': []
-                    }
-                }
-            }
-        },
-        {
-            'id': 2,
-            'title': 'Reading Practice Test 1',
-            'section': 'Reading',
-            'duration_minutes': 45,
-            'description': 'Reading comprehension and analysis',
-            'is_premium': False,
-            'content': {
-                'sections': {
-                    'reading': {
-                        'duration_minutes': 45,
-                        'passages': [],
-                        'questions': []
-                    }
-                }
-            }
-        }
-    ])
+    """Load practice tests from comprehensive OET tests file"""
+    all_tests = load_json_file(OET_TESTS_FILE, [])
+    practice_tests = [t for t in all_tests if t.get('test_type') == 'practice' and not t.get('is_mock_test')]
+    if not practice_tests:
+        return load_json_file(PRACTICE_TESTS_FILE, [])
+    return practice_tests
 
 def get_full_mock_tests():
-    return load_json_file(MOCK_TESTS_FILE, [
-        {
-            'id': 100,
-            'title': 'Complete OET Mock Test 1',
-            'section': 'All Sections',
-            'duration_minutes': 180,
-            'description': 'Full OET practice exam covering all sections',
-            'is_mock_test': True,
-            'is_premium': False,
-            'content': {
-                'sections': {
-                    'reading': {
-                        'duration_minutes': 45,
-                        'passages': [
-                            {
-                                'id': 1,
-                                'title': 'Patient Care Guidelines',
-                                'content': 'Comprehensive patient care guidelines for healthcare professionals...'
-                            }
-                        ],
-                        'questions': [
-                            {
-                                'id': 1,
-                                'question': 'What is the primary focus of patient care?',
-                                'type': 'multiple_choice',
-                                'options': ['Safety', 'Efficiency', 'Cost', 'Speed'],
-                                'correct_answer': 0
-                            }
-                        ]
-                    }
-                }
-            }
-        }
-    ])
+    """Load full mock tests from comprehensive OET tests file"""
+    all_tests = load_json_file(OET_TESTS_FILE, [])
+    mock_tests = [t for t in all_tests if t.get('is_mock_test', False)]
+    if not mock_tests:
+        return load_json_file(MOCK_TESTS_FILE, [])
+    return mock_tests
 
 def get_test_by_id(test_id):
     practice_tests = get_practice_tests()
@@ -352,10 +295,10 @@ os.makedirs(PDF_DIR, exist_ok=True)
 
 TEST_ANSWERS = {
     'Reading': {
-        'question_1': '2',
+        'question_1': '1',
         'question_2': '2',
         'question_3': '1',
-        'question_4': '1',
+        'question_4': '3',
         'question_5': '1',
         'question_6': '1',
         'question_7': '3',
@@ -365,21 +308,23 @@ TEST_ANSWERS = {
     },
     'Listening': {
         'question_1': '1',
-        'question_2': '2',
-        'question_3': '1',
-        'question_4': '1',
+        'question_2': '0',
+        'question_3': '2',
+        'question_4': '2',
         'question_5': '1',
         'question_6': '1',
         'question_7': '2',
-        'question_8': '1',
+        'question_8': '0',
         'question_9': '1',
-        'question_10': '1'
+        'question_10': '2'
     },
     'Writing': {
-        'question_writing': 'manual_grading_required'
+        'task_1': 'manual_grading_required',
+        'task_2': 'manual_grading_required'
     },
     'Speaking': {
-        'question_speaking': 'manual_grading_required'
+        'task_1': 'manual_grading_required',
+        'task_2': 'manual_grading_required'
     }
 }
 
@@ -390,16 +335,29 @@ def calculate_test_score(answers, test_section, test_data=None):
         return 0.0
 
     correct_answers = TEST_ANSWERS[test_section]
+    
+    # For Writing and Speaking, require manual grading
+    if test_section in ['Writing', 'Speaking']:
+        # These sections need manual review
+        # Return a preliminary score based on completion
+        completed_tasks = sum(1 for key, value in answers.items() 
+                             if key.startswith('task_') and value.strip())
+        total_tasks = sum(1 for key in correct_answers.keys())
+        
+        if total_tasks == 0:
+            return 0.0
+        
+        # Give 50% completion score; human reviewer will adjust
+        completion_percentage = (completed_tasks / total_tasks) * 100
+        return min(50.0, completion_percentage * 0.5)  # Max 50% until human review
+    
+    # For multiple choice sections (Reading, Listening)
     total_questions = len(correct_answers)
     correct_count = 0
 
     for question_key, correct_answer in correct_answers.items():
-        if correct_answer == 'manual_grading_required':
-            if question_key in answers and answers[question_key].strip():
-                correct_count += 0.7
-        else:
-            if question_key in answers and answers[question_key] == correct_answer:
-                correct_count += 1
+        if question_key in answers and answers[question_key] == correct_answer:
+            correct_count += 1
 
     score = (correct_count / total_questions) * 100 if total_questions > 0 else 0.0
     return max(0.0, min(100.0, round(score, 1)))
@@ -515,14 +473,26 @@ def take_test(test_id):
     is_mock_test = test.get('is_mock_test', False)
     session['mock_test'] = is_mock_test
 
-    if is_mock_test:
-        return render_template('mock_test_interface.html', test=test)
-
-    if not current_user.is_authenticated:
+    if not current_user.is_authenticated and not is_mock_test:
         flash('Please log in to take this test', 'warning')
         return redirect(url_for('login'))
 
-    return render_template('practice_test_interface.html', test=test)
+    # Route based on section
+    section = test.get('section', 'Reading').lower()
+    
+    if section == 'reading':
+        return render_template('reading_test_interface.html', test=test)
+    elif section == 'listening':
+        return render_template('listening_test_interface.html', test=test)
+    elif section == 'writing':
+        return render_template('writing_test_interface.html', test=test)
+    elif section == 'speaking':
+        return render_template('speaking_test_interface.html', test=test)
+    elif section == 'all sections':
+        return render_template('mock_test_interface.html', test=test)
+    else:
+        # Default to practice test interface
+        return render_template('practice_test_interface.html', test=test)
 
 @app.route('/submit-test', methods=['POST'])
 def submit_test():

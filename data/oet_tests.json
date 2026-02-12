@@ -1,0 +1,309 @@
+[
+  {
+    "id": 1,
+    "title": "OET Reading Practice Test 1",
+    "section": "Reading",
+    "duration_minutes": 45,
+    "description": "Reading comprehension test for healthcare professionals",
+    "is_premium": false,
+    "test_type": "practice",
+    "content": {
+      "passages": [
+        {
+          "id": 1,
+          "title": "Patient Safety in Healthcare Settings",
+          "text": "Patient safety is a fundamental principle in modern healthcare. Healthcare professionals must implement comprehensive safety protocols to prevent adverse events and protect patient welfare. These protocols include proper identification procedures, medication management systems, and communication standards. Studies have shown that effective safety measures can reduce hospital-acquired infections by up to 40%. Healthcare organizations should establish clear reporting mechanisms for safety incidents and encourage a culture of continuous improvement. Staff training and education are essential components of maintaining high safety standards.",
+          "questions": [
+            {
+              "id": 1,
+              "question": "According to the passage, what is the primary purpose of safety protocols?",
+              "type": "multiple_choice",
+              "options": [
+                "To reduce hospital costs",
+                "To prevent adverse events and protect patient welfare",
+                "To improve staff efficiency",
+                "To increase patient satisfaction"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "Which of the following is NOT mentioned as a safety protocol?",
+              "type": "multiple_choice",
+              "options": [
+                "Proper identification procedures",
+                "Medication management systems",
+                "Staff annual performance reviews",
+                "Communication standards"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Cardiovascular Health Management",
+          "text": "Cardiovascular disease remains the leading cause of mortality worldwide. Management of cardiovascular conditions requires a holistic approach combining pharmacological interventions, lifestyle modifications, and regular monitoring. Patients should maintain a balanced diet low in saturated fats and sodium, engage in regular physical activity, and manage stress effectively. Healthcare providers must educate patients about warning signs and encourage adherence to prescribed treatments. Modern diagnostic tools such as cardiac imaging and biomarker testing enable early detection and intervention.",
+          "questions": [
+            {
+              "id": 3,
+              "question": "What does the passage identify as the leading cause of mortality worldwide?",
+              "type": "multiple_choice",
+              "options": [
+                "Respiratory diseases",
+                "Cardiovascular disease",
+                "Cancer",
+                "Infectious diseases"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 4,
+              "question": "According to the passage, which lifestyle factor is NOT recommended for cardiovascular health?",
+              "type": "multiple_choice",
+              "options": [
+                "Regular physical activity",
+                "Balanced diet low in saturated fats",
+                "Stress management",
+                "High sodium intake"
+              ],
+              "correct_answer": 3
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 2,
+    "title": "OET Listening Practice Test 1",
+    "section": "Listening",
+    "duration_minutes": 30,
+    "description": "Listening comprehension for healthcare communication",
+    "is_premium": false,
+    "test_type": "practice",
+    "content": {
+      "audio_file": "listening_test_1.mp3",
+      "passages": [
+        {
+          "id": 1,
+          "title": "Patient Consultation - Hypertension Management",
+          "description": "A doctor discussing blood pressure management with a patient",
+          "duration_seconds": 180,
+          "questions": [
+            {
+              "id": 1,
+              "question": "What is the patient's main concern?",
+              "type": "multiple_choice",
+              "options": [
+                "Severe headaches",
+                "High blood pressure",
+                "Joint pain",
+                "Vision problems"
+              ],
+              "correct_answer": 1
+            },
+            {
+              "id": 2,
+              "question": "How often should the patient monitor their blood pressure?",
+              "type": "multiple_choice",
+              "options": [
+                "Daily",
+                "Twice weekly",
+                "Weekly",
+                "Monthly"
+              ],
+              "correct_answer": 0
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "title": "Nurse-Patient Interaction - Post-Operative Care",
+          "description": "A nurse explaining post-operative care instructions",
+          "duration_seconds": 240,
+          "questions": [
+            {
+              "id": 3,
+              "question": "When should the patient remove their bandage?",
+              "type": "multiple_choice",
+              "options": [
+                "Immediately after surgery",
+                "After 24 hours",
+                "After 48 hours",
+                "After 72 hours"
+              ],
+              "correct_answer": 2
+            },
+            {
+              "id": 4,
+              "question": "What should the patient do if they experience excessive bleeding?",
+              "type": "multiple_choice",
+              "options": [
+                "Wait and monitor",
+                "Apply more bandages",
+                "Contact the hospital immediately",
+                "Take pain medication"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "title": "OET Writing Practice Test 1",
+    "section": "Writing",
+    "duration_minutes": 45,
+    "description": "Professional medical writing for healthcare communication",
+    "is_premium": false,
+    "test_type": "practice",
+    "content": {
+      "tasks": [
+        {
+          "id": 1,
+          "task_number": 1,
+          "title": "Professional Letter Writing",
+          "description": "Write a professional letter to a colleague regarding patient referral",
+          "prompt": "You are a healthcare professional. Write a professional letter to a specialist requesting a consultation for your patient. Include:\n1. Patient details\n2. Reason for referral\n3. Relevant medical history\n4. Request for appointment",
+          "word_limit": 180,
+          "time_limit_minutes": 20,
+          "sample_answer": "Dear Dr. Smith,\n\nI am writing to request your specialist consultation for my patient, Mr. John Anderson (DOB: 15/03/1965), who has been experiencing persistent abdominal pain for the past three weeks.\n\nMr. Anderson initially presented with intermittent pain in the lower abdomen, accompanied by occasional nausea. Initial examinations and routine blood tests have not revealed a clear diagnosis. Given the symptoms' persistence and impact on his quality of life, I believe specialist gastroenterological evaluation would be beneficial.\n\nHis medical history includes hypertension (controlled with medication) and a previous appendectomy in 2010. He is currently on no medications related to gastrointestinal issues.\n\nWould you be available to see this patient within the next two weeks? Please advise on your availability.\n\nThank you for your attention to this matter.\n\nBest regards,\nDr. Johnson"
+        },
+        {
+          "id": 2,
+          "task_number": 2,
+          "title": "Case Note Writing",
+          "description": "Write comprehensive case notes from a patient consultation",
+          "prompt": "Based on your patient consultation, write detailed case notes including:\n1. Presenting complaint\n2. History of present illness\n3. Physical examination findings\n4. Assessment and diagnosis\n5. Management plan",
+          "word_limit": 200,
+          "time_limit_minutes": 25,
+          "sample_answer": "CASE NOTES - Patient: Ms. Sarah Mitchell\nDate: 15/02/2024\n\nPRESENTING COMPLAINT:\n58-year-old female presenting with fatigue and shortness of breath\n\nHISTORY OF PRESENT ILLNESS:\nPatient reports progressive fatigue over the past 6 weeks, worsened by exertion. Associated with dyspnea on moderate exertion and palpitations. No chest pain. Sleep quality diminished.\n\nPAST MEDICAL HISTORY:\nType 2 diabetes (diagnosed 2018), hypertension\n\nEXAMINATION FINDINGS:\nBP 158/94 mmHg, HR 92 bpm, RR 20/min. Auscultation reveals no murmurs. Peripheral edema absent.\n\nASSESSMENT:\nSuspected cardiac arrhythmia with secondary fatigue. Differential includes thyroid dysfunction.\n\nMANAGEMENT PLAN:\n1. ECG and cardiac monitoring\n2. Full blood count and thyroid function tests\n3. Review medications\n4. Follow-up appointment in 2 weeks"
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "title": "OET Speaking Practice Test 1",
+    "section": "Speaking",
+    "duration_minutes": 20,
+    "description": "Professional communication for healthcare professionals",
+    "is_premium": false,
+    "test_type": "practice",
+    "content": {
+      "tasks": [
+        {
+          "id": 1,
+          "task_number": 1,
+          "title": "Role Play - Patient Consultation",
+          "description": "Conduct a professional consultation with a simulated patient",
+          "prompt": "You are a healthcare professional. Your patient has come to see you with concerns about their recent test results. You need to:\n1. Welcome the patient and establish rapport\n2. Explain the test results in understandable terms\n3. Discuss treatment options\n4. Address patient concerns\n5. Provide clear instructions for follow-up",
+          "duration_minutes": 12,
+          "assessment_criteria": [
+            "Clarity and pronunciation",
+            "Fluency and coherence",
+            "Lexical appropriateness",
+            "Grammar and sentence structure",
+            "Professional communication skills",
+            "Listening and interaction"
+          ],
+          "sample_script": "Healthcare Professional: Good morning, Mrs. Williams. Thank you for coming in. I wanted to discuss your recent blood test results with you. How are you feeling today?\n\nPatient: I'm a bit worried, doctor. I haven't felt myself lately.\n\nHealthcare Professional: I understand your concern. Your test results actually show some interesting findings that we should discuss. Your thyroid function appears slightly elevated, which could explain the fatigue you've been experiencing. This is manageable with appropriate treatment.\n\nPatient: Is it serious?\n\nHealthcare Professional: It's not a serious condition, but it does require monitoring and treatment. I'd like to start you on a thyroid medication. We'll need to check your levels again in about 6 weeks to ensure we have the right dosage.\n\nPatient: What should I do about diet?\n\nHealthcare Professional: That's a good question. Generally, maintaining a balanced diet is important. Some foods can interfere with thyroid medication, so take it on an empty stomach, preferably in the morning. I'll give you a detailed information sheet about this."
+        },
+        {
+          "id": 2,
+          "task_number": 2,
+          "title": "Extended Response",
+          "description": "Answer questions about a healthcare scenario",
+          "prompt": "You will be asked several questions about your healthcare experience. Answer clearly and in detail, drawing on your professional experience. Topics may include patient communication, treatment decisions, healthcare challenges, etc.",
+          "duration_minutes": 8,
+          "assessment_criteria": [
+            "Response relevance",
+            "Detail and examples",
+            "Professional language",
+            "Fluency",
+            "Grammar accuracy"
+          ],
+          "sample_questions": [
+            "Tell me about a challenging patient interaction you've had and how you handled it.",
+            "Describe your approach to communicating complex medical information to patients.",
+            "What strategies do you use to ensure patient compliance with treatment plans?"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": 100,
+    "title": "Complete OET Mock Test 1",
+    "section": "All Sections",
+    "duration_minutes": 160,
+    "description": "Full OET practice exam with all four sections (Reading, Writing, Listening, Speaking)",
+    "is_premium": false,
+    "is_mock_test": true,
+    "test_type": "mock",
+    "content": {
+      "total_score_out_of": 500,
+      "sections": [
+        {
+          "section_name": "Reading",
+          "duration_minutes": 45,
+          "score_out_of": 100,
+          "test_id": 1
+        },
+        {
+          "section_name": "Writing",
+          "duration_minutes": 45,
+          "score_out_of": 100,
+          "test_id": 3
+        },
+        {
+          "section_name": "Listening",
+          "duration_minutes": 30,
+          "score_out_of": 100,
+          "test_id": 2
+        },
+        {
+          "section_name": "Speaking",
+          "duration_minutes": 20,
+          "score_out_of": 100,
+          "test_id": 4
+        }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "title": "OET Reading Practice Test 2",
+    "section": "Reading",
+    "duration_minutes": 45,
+    "description": "Advanced reading comprehension for experienced healthcare professionals",
+    "is_premium": true,
+    "test_type": "practice",
+    "content": {
+      "passages": [
+        {
+          "id": 1,
+          "title": "Infection Control Protocols",
+          "text": "Infection prevention and control (IPC) is a critical component of healthcare delivery. Healthcare-associated infections (HAIs) represent a significant burden on healthcare systems, affecting patient outcomes and increasing costs. Implementation of evidence-based IPC practices requires coordination across all levels of healthcare organizations. Hand hygiene remains the most effective single intervention. Environmental cleanliness, appropriate use of personal protective equipment (PPE), and antimicrobial stewardship are equally important. Healthcare workers must receive ongoing training and competency assessments. Monitoring compliance and conducting regular audits ensure sustained effectiveness.",
+          "questions": [
+            {
+              "id": 1,
+              "question": "What is described as the most effective single intervention for infection control?",
+              "type": "multiple_choice",
+              "options": [
+                "Environmental cleanliness",
+                "Appropriate use of PPE",
+                "Hand hygiene",
+                "Antimicrobial therapy"
+              ],
+              "correct_answer": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

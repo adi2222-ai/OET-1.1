@@ -1,0 +1,142 @@
+[
+  {
+    "id": 1,
+    "word": "Hypertension",
+    "definition": "Abnormally high blood pressure, usually above 140/90 mmHg",
+    "specialty": "Cardiovascular",
+    "example": "The patient was diagnosed with hypertension and prescribed antihypertensive medications."
+  },
+  {
+    "id": 2,
+    "word": "Tachycardia",
+    "definition": "An abnormally fast heart rate, usually above 100 beats per minute at rest",
+    "specialty": "Cardiovascular",
+    "example": "The patient exhibited tachycardia during the emergency presentation."
+  },
+  {
+    "id": 3,
+    "word": "Dyspnea",
+    "definition": "Difficulty or shortness of breath",
+    "specialty": "Respiratory",
+    "example": "The patient complained of dyspnea when climbing stairs."
+  },
+  {
+    "id": 4,
+    "word": "Hypoglycemia",
+    "definition": "Abnormally low level of glucose in the blood",
+    "specialty": "Endocrinology",
+    "example": "The diabetic patient showed signs of hypoglycemia and required immediate glucose administration."
+  },
+  {
+    "id": 5,
+    "word": "Arrhythmia",
+    "definition": "An irregular heartbeat or deviation from the normal heart rhythm",
+    "specialty": "Cardiovascular",
+    "example": "The ECG revealed an arrhythmia that required further investigation."
+  },
+  {
+    "id": 6,
+    "word": "Edema",
+    "definition": "Swelling caused by excess fluid trapped in body tissues",
+    "specialty": "General",
+    "example": "The patient presented with peripheral edema in the lower extremities."
+  },
+  {
+    "id": 7,
+    "word": "Pneumonia",
+    "definition": "Inflammation of the lungs caused by bacterial, viral, or fungal infection",
+    "specialty": "Respiratory",
+    "example": "The chest X-ray confirmed pneumonia in the left lower lobe."
+  },
+  {
+    "id": 8,
+    "word": "Hematoma",
+    "definition": "A collection of blood outside blood vessels, usually caused by trauma",
+    "specialty": "Surgery",
+    "example": "A subdural hematoma was identified on the CT scan."
+  },
+  {
+    "id": 9,
+    "word": "Sepsis",
+    "definition": "A life-threatening condition caused by the body's response to infection",
+    "specialty": "Critical Care",
+    "example": "The patient developed sepsis following the surgical procedure."
+  },
+  {
+    "id": 10,
+    "word": "Thrombosis",
+    "definition": "Formation of a blood clot within a blood vessel",
+    "specialty": "Cardiovascular",
+    "example": "Deep vein thrombosis was detected in the patient's leg."
+  },
+  {
+    "id": 11,
+    "word": "Auscultation",
+    "definition": "The act of listening to sounds within the body using a stethoscope",
+    "specialty": "Physical Examination",
+    "example": "During auscultation of the lungs, the doctor heard abnormal breath sounds."
+  },
+  {
+    "id": 12,
+    "word": "Palpation",
+    "definition": "The act of feeling or pressing on the body surface with hands to examine an organ",
+    "specialty": "Physical Examination",
+    "example": "Palpation of the abdomen revealed tenderness in the right upper quadrant."
+  },
+  {
+    "id": 13,
+    "word": "Pallor",
+    "definition": "Abnormal lightness or whiteness of the skin",
+    "specialty": "General",
+    "example": "The patient's pallor indicated possible anemia."
+  },
+  {
+    "id": 14,
+    "word": "Cyanosis",
+    "definition": "A bluish discoloration of the skin caused by low oxygen levels",
+    "specialty": "General",
+    "example": "Peripheral cyanosis was noted in the patient's fingertips."
+  },
+  {
+    "id": 15,
+    "word": "Jaundice",
+    "definition": "Yellowing of the skin and whites of the eyes due to bilirubin buildup",
+    "specialty": "Hepatology",
+    "example": "The patient presented with jaundice and dark urine."
+  },
+  {
+    "id": 16,
+    "word": "Prognosis",
+    "definition": "The predicted outcome or course of a disease",
+    "specialty": "General",
+    "example": "The prognosis for early-stage cancer is generally favorable."
+  },
+  {
+    "id": 17,
+    "word": "Etiology",
+    "definition": "The cause or origin of a disease or condition",
+    "specialty": "General",
+    "example": "The etiology of the patient's symptoms remained unclear."
+  },
+  {
+    "id": 18,
+    "word": "Pathology",
+    "definition": "The study of disease, including its causes and effects",
+    "specialty": "Laboratory",
+    "example": "The pathology report confirmed the diagnosis of malignancy."
+  },
+  {
+    "id": 19,
+    "word": "Biopsy",
+    "definition": "A procedure in which tissue samples are taken from the body for examination",
+    "specialty": "Laboratory",
+    "example": "A biopsy was performed to rule out malignant disease."
+  },
+  {
+    "id": 20,
+    "word": "Intubation",
+    "definition": "Insertion of a tube into the trachea to maintain an open airway",
+    "specialty": "Critical Care",
+    "example": "The patient required intubation due to severe respiratory failure."
+  }
+]

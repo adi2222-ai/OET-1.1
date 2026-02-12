@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Writing Test{% endblock %}
+
+{% block content %}
+<style>
+    .writing-interface {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .task-container {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .task-prompt {
+        background: #e7f3ff;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+    }
+    .instruction-badge {
+        display: inline-block;
+        background: #007bff;
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+    .writing-textarea {
+        min-height: 250px;
+        font-family: 'Courier New', monospace;
+        resize: vertical;
+    }
+    .word-count {
+        text-align: right;
+        color: #6c757d;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+    .task-timer {
+        background: #fff3cd;
+        padding: 10px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .task-section {
+        border: 2px solid #dee2e6;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="writing-interface mt-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>{{ test.title }}</h2>
+            <p class="text-muted">{{ test.description }}</p>
+            <p class="text-info"><i class="fas fa-info-circle me-2"></i><strong>Total Time: {{ test.duration_minutes }} minutes</strong></p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="alert alert-warning">
+                <div class="h4 mb-0" id="timer">{{ test.duration_minutes }}:00</div>
+                <small>Overall Time Remaining</small>
+            </div>
+        </div>
+    </div>
+
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        {% if test.content.tasks %}
+            {% for task in test.content.tasks %}
+            <div class="task-section">
+                <div class="row align-items-start">
+                    <div class="col-md-3">
+                        <h5 class="mb-3">
+                            <span class="badge bg-primary">Task {{ task.task_number }}</span>
+                        </h5>
+                        <h6>{{ task.title }}</h6>
+                        <div class="task-timer mt-3">
+                            <i class="fas fa-hourglass-half me-2"></i>
+                            {{ task.time_limit_minutes }} min
+                        </div>
+                        <div class="mt-3">
+                            <span class="instruction-badge">
+                                <i class="fas fa-pen-fancy me-1"></i>Word Limit
+                            </span>
+                            <strong>{{ task.word_limit }}</strong>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="task-prompt">
+                            <strong>Instructions:</strong>
+                            <div class="mt-3" style="white-space: pre-wrap;">{{ task.prompt }}</div>
+                        </div>
+
+                        <label for="task_{{ task.id }}" class="form-label"><strong>Your Answer:</strong></label>
+                        <textarea 
+                            id="task_{{ task.id }}" 
+                            name="task_{{ task.id }}" 
+                            class="form-control writing-textarea"
+                            placeholder="Write your response here..."
+                            data-word-limit="{{ task.word_limit }}"></textarea>
+                        <div class="word-count">
+                            <span class="current-words">0</span> / <span class="max-words">{{ task.word_limit }}</span> words
+                        </div>
+
+                        {% if task.sample_answer %}
+                        <details class="mt-3 p-3 bg-light rounded">
+                            <summary class="cursor-pointer font-weight-bold">
+                                <i class="fas fa-lightbulb me-2"></i>View Sample Answer
+                            </summary>
+                            <div class="mt-3 p-3 border bg-white rounded" style="white-space: pre-wrap;">
+                                {{ task.sample_answer }}
+                            </div>
+                        </details>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Writing tasks will be loaded here
+            </div>
+        {% endif %}
+
+        <div class="mt-4 mb-4">
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+                <i class="fas fa-check me-2"></i>Submit Writing Test
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Word counter for each textarea
+    document.querySelectorAll('.writing-textarea').forEach(textarea => {
+        const updateWordCount = () => {
+            const container = textarea.parentElement;
+            const text = textarea.value.trim();
+            const wordCount = text ? text.split(/\s+/).length : 0;
+            container.querySelector('.current-words').textContent = wordCount;
+        };
+
+        textarea.addEventListener('input', updateWordCount);
+        textarea.addEventListener('keyup', updateWordCount);
+    });
+
+    // Timer countdown
+    const startTimer = () => {
+        let minutes = {{ test.duration_minutes }};
+        let seconds = 0;
+        const timerEl = document.getElementById('timer');
+        
+        setInterval(() => {
+            if (seconds === 0 && minutes === 0) {
+                document.getElementById('testForm').submit();
+                return;
+            }
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+            timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+    };
+    
+    document.addEventListener('DOMContentLoaded', startTimer);
+</script>
+{% endblock %}

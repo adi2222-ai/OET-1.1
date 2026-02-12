@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}{{ test.title }} - OET Reading Test{% endblock %}
+
+{% block content %}
+<style>
+    .reading-interface {
+        display: flex;
+        height: calc(100vh - 200px);
+        gap: 20px;
+    }
+    .passage-section {
+        flex: 1;
+        overflow-y: auto;
+        border-right: 2px solid #dee2e6;
+        padding: 20px;
+    }
+    .questions-section {
+        flex: 0 0 40%;
+        overflow-y: auto;
+        padding: 20px;
+    }
+    .passage {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .question-group {
+        background: #fff;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+    }
+    .timer {
+        position: sticky;
+        top: 10px;
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .timer-large {
+        font-size: 2em;
+        font-weight: bold;
+        color: #dc3545;
+    }
+</style>
+
+<div class="container-fluid mt-4">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <h2>{{ test.title }}</h2>
+            <p class="text-muted">{{ test.description }}</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="timer">
+                <div class="timer-large" id="timer">{{ test.duration_minutes }}:00</div>
+                <small>Time Remaining</small>
+            </div>
+        </div>
+    </div>
+
+    <form id="testForm" method="POST" action="{{ url_for('submit_test') }}">
+        <div class="reading-interface">
+            <!-- Passages -->
+            <div class="passage-section">
+                {% if test.content.passages %}
+                    {% for passage in test.content.passages %}
+                        <div class="passage">
+                            <h4>{{ passage.title }}</h4>
+                            <div class="passage-content">
+                                {{ passage.text }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Reading passages will be loaded here
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Questions -->
+            <div class="questions-section">
+                {% if test.content.passages %}
+                    {% for passage in test.content.passages %}
+                        {% if passage.questions %}
+                            {% for question in passage.questions %}
+                                <div class="question-group">
+                                    <h6 class="mb-3">
+                                        Question {{ question.id }}
+                                    </h6>
+                                    <p class="mb-3"><strong>{{ question.question }}</strong></p>
+                                    
+                                    {% if question.type == 'multiple_choice' %}
+                                        <div class="options">
+                                            {% for idx, option in enumerate(question.options) %}
+                                                <div class="form-check mb-2">
+                                                    <input 
+                                                        class="form-check-input" 
+                                                        type="radio" 
+                                                        name="question_{{ question.id }}" 
+                                                        id="q{{ question.id }}_opt{{ idx }}" 
+                                                        value="{{ idx }}">
+                                                    <label class="form-check-label" for="q{{ question.id }}_opt{{ idx }}">
+                                                        {{ option }}
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Questions will be loaded here
+                    </div>
+                {% endif %}
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        <i class="fas fa-check me-2"></i>Submit Reading Test
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Timer countdown
+    const startTimer = () => {
+        let minutes = {{ test.duration_minutes }};
+        let seconds = 0;
+        const timerEl = document.getElementById('timer');
+        
+        setInterval(() => {
+            if (seconds === 0 && minutes === 0) {
+                document.getElementById('testForm').submit();
+                return;
+            }
+            if (seconds === 0) {
+                minutes--;
+                seconds = 59;
+            } else {
+                seconds--;
+            }
+            timerEl.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }, 1000);
+    };
+    
+    document.addEventListener('DOMContentLoaded', startTimer);
+</script>
+{% endblock %}
